@@ -13,9 +13,9 @@ function App() {
   return (
     <>
     <h2>Nguyễn Đức Anh_22712781</h2>
-    {/* <BaiTap1/>
-    <BaiTap2/> */}
-    <BaiTap3/>
+    <BaiTap1/>
+     {/* <BaiTap2/> */}
+    {/* <BaiTap3/> */}
     </>
   )
 }
