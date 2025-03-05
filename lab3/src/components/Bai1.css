@@ -1,0 +1,59 @@
+.flex-container {
+    display: flex;
+  }
+  
+  .flex-container > div {
+    margin: 10px;
+    padding: 20px;
+  }
+
+  .footer{
+    height: 400px;
+    width: 100%;
+    background-color: #1d2228;
+  }
+
+  .section{
+    width: 100%;
+  }
+
+  .left{
+    width: 50%;
+    display: inline-block;
+  }
+
+  .right{
+    width: 50%;
+    display: inline-block;
+  }
+  
+  .row{
+    height: 200px;
+    width: 100%;
+  }
+  .menu,
+  .avatar{
+    display: flex;
+    list-style-type: none;
+    font-size: 18px;
+    line-height: 100px;
+    color: gray;
+  }
+
+  .menu>li{
+    margin-right: 10px;
+    display: inline-block;
+  }
+
+  .recipe{
+    display: flex;
+    list-style-type: none;
+    font-size: 18px;
+    line-height: 100px;
+    color: rgb(138, 47, 62);
+  }
+.dong{
+  display: flex;
+}
+
+  
