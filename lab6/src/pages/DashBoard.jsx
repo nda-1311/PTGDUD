@@ -1,27 +1,17 @@
-// [IMPORTS GIỮ NGUYÊN]
-import '../components/Layout.css';
-import logo from '../img/logo.png';
-import bell from '../img/Bell 1.png';
-import question from '../img/Question 1.png';
-import avatar from '../img/Avatar 313.png';
+import '../pages/DashBoard.css';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import DataTable from '../components/DataTable';
 import iconOverview from '../img/Squares four 1.png';
 import iconCart from '../img/Button 1509.png';
 import iconMoney from '../img/Button 1529.png';
 import iconAccount from '../img/Button 1530.png';
 import iconFile from '../img/File text 1.png';
-import iconFolder from '../img/Folder.png';
-import iconGroup from '../img/Groups.png';
-import iconPie from '../img/Pie chart.png';
-import iconChat from '../img/Chat.png';
-import iconCode from '../img/Code.png';
-import { useEffect, useState } from 'react';
-import DataTable from '../components/DataTable';
-import iconActive from '../img/active.png';
-import imgBanner from '../img/Group.png';
-import { NavLink, Routes, Route, useLocation } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Sidebar from '../components/SideBar';
 
-const Layout = () => {
-    // yc2 api overview
+const DashBoard = () => {
     const [overviewData, setOverviewData] = useState([]);
     const [apiData, setApiData] = useState([]);
 
@@ -34,7 +24,6 @@ const Layout = () => {
         setOverviewData(mockData);
     }, []);
 
-    // yc3 table
     const tableColumns = [
         { label: 'CUSTOMER NAME', key: 'name' },
         { label: 'COMPANY', key: 'company' },
@@ -43,7 +32,6 @@ const Layout = () => {
         { label: 'STATUS', key: 'status' },
     ];
 
-    // yc4 api table
     useEffect(() => {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
@@ -60,7 +48,6 @@ const Layout = () => {
             .catch(err => console.error("Error fetching API:", err));
     }, []);
 
-    // yc5 isActive (✅ Đã thay bằng useLocation)
     const location = useLocation();
     const getPageTitle = (pathname) => {
         const map = {
@@ -78,70 +65,13 @@ const Layout = () => {
 
     return (
         <div className="menu flex min-h-screen bg-gray-100">
-            {/* Sidebar */}
-            <aside className="w-1/5 bg-white shadow-xl p-5 flex flex-col justify-between border-r border-gray-300">
-                <div>
-                    <img className="mb-10 w-32" src={logo} alt="Logo" />
-                    {/* Sidebar items dùng NavLink */}
-                    {[
-                        { label: "Dashboard", icon: iconOverview, path: "/dashboard" },
-                        { label: "Projects", icon: iconFolder, path: "/projects" },
-                        { label: "Teams", icon: iconGroup, path: "/teams" },
-                        { label: "Analytics", icon: iconPie, path: "/analytics" },
-                        { label: "Messages", icon: iconChat, path: "/messages" },
-                        { label: "Integrations", icon: iconCode, path: "/integrations" },
-                    ].map((item) => (
-                        <NavLink
-                            to={item.path}
-                            key={item.label}
-                            className={({ isActive }) =>
-                                `flex items-center gap-2 mb-5 cursor-pointer px-3 py-2 rounded-md transition-all duration-200 ${isActive
-                                    ? "bg-[#f14f7e] text-white"
-                                    : "text-gray-700 hover:bg-pink-200"
-                                }`
-                            }
-                        >
-                            <img
-                                src={location.pathname === item.path ? iconActive : item.icon}
-                                alt=""
-                            />
-                            <span>{item.label}</span>
-                        </NavLink>
-                    ))}
-                </div>
+            <Sidebar />
 
-                <div className='bg-[#eff6ff] w-56 h-64 mb-30 ml-10'>
-                    <img src={imgBanner} alt="" />
-                    <button
-                        style={{ cursor: "pointer" }}
-                        className="flex items-center gap-2 px-4 py-2 border border-[#4d94ff] rounded text-[#4d94ff] hover:bg-[#4d94ff] hover:text-white w-56 mt-10 justify-center"
-                    >
-                        Try now
-                    </button>
-                </div>
-            </aside>
-
-            {/* Main content */}
             <main className="content flex-1 p-8 bg-white">
-                {/* Header */}
-                <div className="header flex justify-between items-center mb-8  ">
-                    <h2 className="text-3xl font-bold text-[#f14f7e]">{activeMenu}</h2>
-                    <div className="flex items-center gap-4">
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            className="border px-3 py-1 w-64 rounded-md"
-                        />
-                        <img src={bell} alt="bell" />
-                        <img src={question} alt="question" />
-                        <img src={avatar} alt="avatar" className="w-8 h-8 rounded-full" />
-                    </div>
-                </div>
+                <Header title={activeMenu} />
 
-                {/* Nội dung hiển thị theo từng tab */}
                 {activeMenu === "Dashboard" ? (
                     <>
-                        {/* Overview Section */}
                         <div className="mb-10">
                             <div className="flex items-center gap-2 mb-4">
                                 <img src={iconOverview} alt="" />
@@ -179,7 +109,6 @@ const Layout = () => {
                             </div>
                         </div>
 
-                        {/* Table Section */}
                         <div className="mb-6">
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center gap-2">
@@ -187,11 +116,11 @@ const Layout = () => {
                                     <h1 className="text-2xl font-bold">Detailed Report</h1>
                                 </div>
                                 <div className="flex gap-4">
-                                    <button style={{ cursor: "pointer" }} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white  rounded text-[#f14f7e]">
+                                    <button style={{cursor: "pointer"}} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white  rounded text-[#f14f7e]">
                                         <img src={iconFile} alt="" className="w-4 h-4" />
                                         Import
                                     </button>
-                                    <button style={{ cursor: "pointer" }} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white rounded text-[#f14f7e]">
+                                    <button style={{cursor: "pointer"}}  className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white rounded text-[#f14f7e]">
                                         <img src={iconFile} alt="" className="w-4 h-4" />
                                         Export
                                     </button>
@@ -200,11 +129,7 @@ const Layout = () => {
                             <DataTable columns={tableColumns} data={apiData} />
                         </div>
 
-                        {/* Footer */}
-                        <div className="footer flex justify-between text-gray-600 mt-10 text-sm">
-                            <p>Số Result: {apiData.length}</p>
-                            <p>Đánh số trang: 1, 2, 3</p>
-                        </div>
+                        <Footer totalResults={apiData.length} />
                     </>
                 ) : (
                     <div className="text-gray-600 text-lg font-medium">
@@ -216,4 +141,4 @@ const Layout = () => {
     );
 };
 
-export default Layout;
+export default DashBoard;
