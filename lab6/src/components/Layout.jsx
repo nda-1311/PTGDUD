@@ -35,7 +35,7 @@ const Layout = () => {
         setOverviewData(mockData);
     }, []);
 
-    
+
 
     //table yc3
     const tableColumns = [
@@ -44,56 +44,56 @@ const Layout = () => {
         { label: 'ORDER VALUE', key: 'value' },
         { label: 'ORDER DATE', key: 'date' },
         { label: 'STATUS', key: 'status' },
-      ];
-      
+    ];
+
 
     const tableData = [
-      {
-        name: 'Elizabeth Lee',
-        company: 'AvatarSystems',
-        value: '$359',
-        date: '10/07/2023',
-        status: 'New'
-      },
-      {
-        name: 'Carlos Garcia',
-        company: 'SmoozeShift',
-        value: '$747',
-        date: '24/07/2023',
-        status: 'New'
-      },
-      {
-        name: 'Elizabeth Bailey',
-        company: 'Prime Time T',
-        value: '$564',
-        date: '08/08/2023',
-        status: 'In-progress'
-      },
-      {
-        name: 'Ryan Brown',
-        company: 'OmniTech Corporation',
-        value: '$769',
-        date: '31/08/2023',
-        status: 'In-progress'
-      },
-      {
-        name: 'Ryan Young',
-        company: 'DataStream Inc.',
-        value: '$541',
-        date: '31/08/2023',
-        status: 'In progress'
-      },
-      {
-        name: 'Hailey Adams',
-        company: 'FlowRush',
-        value: '$922',
-        date: '10/06/2023',
-        status: 'Completed'
-      }
+        {
+            name: 'Elizabeth Lee',
+            company: 'AvatarSystems',
+            value: '$359',
+            date: '10/07/2023',
+            status: 'New'
+        },
+        {
+            name: 'Carlos Garcia',
+            company: 'SmoozeShift',
+            value: '$747',
+            date: '24/07/2023',
+            status: 'New'
+        },
+        {
+            name: 'Elizabeth Bailey',
+            company: 'Prime Time T',
+            value: '$564',
+            date: '08/08/2023',
+            status: 'In-progress'
+        },
+        {
+            name: 'Ryan Brown',
+            company: 'OmniTech Corporation',
+            value: '$769',
+            date: '31/08/2023',
+            status: 'In-progress'
+        },
+        {
+            name: 'Ryan Young',
+            company: 'DataStream Inc.',
+            value: '$541',
+            date: '31/08/2023',
+            status: 'In progress'
+        },
+        {
+            name: 'Hailey Adams',
+            company: 'FlowRush',
+            value: '$922',
+            date: '10/06/2023',
+            status: 'Completed'
+        }
     ];
-    
 
-    //yc 4
+
+    //yc4
     const [apiData, setApiData] = useState([]);
 
 
@@ -101,11 +101,19 @@ const Layout = () => {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
             .then(data => {
-                setApiData(data);
+                const mapped = data.map(user => ({
+                    name: user.name,
+                    company: user.company?.name || '',
+                    value: `$${Math.floor(Math.random() * 1000)}`, // giả lập ORDER VALUE
+                    date: '10/04/2024',
+                    status: 'New' 
+                }));
+                setApiData(mapped);
             })
             .catch(err => console.error("Error fetching API:", err));
     }, []);
-    
+
+
 
     return (
         <div>
@@ -205,11 +213,7 @@ const Layout = () => {
 
 
                     </div>
-                    <DataTable columns={tableColumns} data={tableData} />
-
-
-
-
+                    <DataTable columns={tableColumns} data={apiData} />
                 </div>
                 <div className="footer flex justify-between">
                     <h4>Số Result</h4>
