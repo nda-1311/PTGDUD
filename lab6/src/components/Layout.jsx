@@ -17,10 +17,13 @@ import { useEffect, useState } from 'react';
 import DataTable from '../components/DataTable';
 
 
+
 const Layout = () => {
 
-    // dùng API Overview
+    // dùng API Overview yc2
     const [overviewData, setOverviewData] = useState([]);
+
+
 
     useEffect(() => {
 
@@ -32,14 +35,77 @@ const Layout = () => {
         setOverviewData(mockData);
     }, []);
 
-    //table
-    const tableColumns = ['ID', 'Name', 'Age', 'Country'];
-    const tableData = [
-        { id: 1, name: 'John Doe', age: 28, country: 'USA' },
-        { id: 2, name: 'Jane Smith', age: 22, country: 'Canada' },
-        { id: 3, name: 'Sam Brown', age: 33, country: 'UK' }
-    ];
+    
 
+    //table yc3
+    const tableColumns = [
+        { label: 'CUSTOMER NAME', key: 'name' },
+        { label: 'COMPANY', key: 'company' },
+        { label: 'ORDER VALUE', key: 'value' },
+        { label: 'ORDER DATE', key: 'date' },
+        { label: 'STATUS', key: 'status' },
+      ];
+      
+
+    const tableData = [
+      {
+        name: 'Elizabeth Lee',
+        company: 'AvatarSystems',
+        value: '$359',
+        date: '10/07/2023',
+        status: 'New'
+      },
+      {
+        name: 'Carlos Garcia',
+        company: 'SmoozeShift',
+        value: '$747',
+        date: '24/07/2023',
+        status: 'New'
+      },
+      {
+        name: 'Elizabeth Bailey',
+        company: 'Prime Time T',
+        value: '$564',
+        date: '08/08/2023',
+        status: 'In-progress'
+      },
+      {
+        name: 'Ryan Brown',
+        company: 'OmniTech Corporation',
+        value: '$769',
+        date: '31/08/2023',
+        status: 'In-progress'
+      },
+      {
+        name: 'Ryan Young',
+        company: 'DataStream Inc.',
+        value: '$541',
+        date: '31/08/2023',
+        status: 'In progress'
+      },
+      {
+        name: 'Hailey Adams',
+        company: 'FlowRush',
+        value: '$922',
+        date: '10/06/2023',
+        status: 'Completed'
+      }
+    ];
+    
+
+    //yc 4
+    const [apiData, setApiData] = useState([]);
+
+
+    useEffect(() => {
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(res => res.json())
+            .then(data => {
+                setApiData(data);
+            })
+            .catch(err => console.error("Error fetching API:", err));
+    }, []);
+    
 
     return (
         <div>
@@ -139,41 +205,8 @@ const Layout = () => {
 
 
                     </div>
-
-                    {/* <div className="table-container   ">
-                        <table className="my-table ">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Age</th>
-                                    <th>Country</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>John Doe</td>
-                                    <td>28</td>
-                                    <td>USA</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jane Smith</td>
-                                    <td>22</td>
-                                    <td>Canada</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Sam Brown</td>
-                                    <td>33</td>
-                                    <td>UK</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> */}
-
                     <DataTable columns={tableColumns} data={tableData} />
+
 
 
 
