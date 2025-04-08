@@ -21,7 +21,7 @@ const Layout = () => {
     const [overviewData, setOverviewData] = useState([]);
 
     useEffect(() => {
-        // Dữ liệu mẫu, bạn có thể thay bằng API thật
+      
         const mockData = [
             { title: "Total Sales", amount: "$5,000", sub: "↑ 5% since last week" },
             { title: "Revenue", amount: "$8,200", sub: "↑ 2% this month" },
@@ -106,39 +106,6 @@ const Layout = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* <div className='box flex p-5 justify-between'>
-                        <div className="box1 p-5">
-                            <div className="head flex justify-between ">
-                                <p>namebox1</p>
-                                <img src={iconCart} alt="" />
-                            </div>
-                            <p>price1</p>
-                            <p>sub1</p>
-                        </div>
-
-                        <div className="box2 p-5">
-                            <div className="head flex justify-between ">
-                                <p>namebox2</p>
-                                <img src={iconMoney} alt="" />
-                            </div>
-                            <p>price2</p>
-                            <p>sub2</p>
-                        </div>
-
-                        <div className="box3 p-5">
-                            <div className="head flex justify-between ">
-                                <p>namebox3</p>
-                                <img src={iconAccount} alt="" />
-                            </div>
-                            <p>price3</p>
-                            <p>sub3</p>
-                        </div>
-
-                    </div> */}
-
-
-
                     <div className='flex  justify-between'>
                         <div className='flex'>
                             <img src={iconFile} alt="" />
