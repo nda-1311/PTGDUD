@@ -14,6 +14,7 @@ function App() {
   return (
     <Router>
     <Routes>
+    <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/dashboard" element={<DashBoard />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/teams" element={<Teams />} />
