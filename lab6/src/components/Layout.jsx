@@ -14,6 +14,8 @@ import iconPie from '../img/Pie chart.png'
 import iconChat from '../img/Chat.png'
 import iconCode from '../img/Code.png'
 import { useEffect, useState } from 'react';
+import DataTable from '../components/DataTable';
+
 
 const Layout = () => {
 
@@ -21,7 +23,7 @@ const Layout = () => {
     const [overviewData, setOverviewData] = useState([]);
 
     useEffect(() => {
-      
+
         const mockData = [
             { title: "Total Sales", amount: "$5,000", sub: "↑ 5% since last week" },
             { title: "Revenue", amount: "$8,200", sub: "↑ 2% this month" },
@@ -29,6 +31,15 @@ const Layout = () => {
         ];
         setOverviewData(mockData);
     }, []);
+
+    //table
+    const tableColumns = ['ID', 'Name', 'Age', 'Country'];
+    const tableData = [
+        { id: 1, name: 'John Doe', age: 28, country: 'USA' },
+        { id: 2, name: 'Jane Smith', age: 22, country: 'Canada' },
+        { id: 3, name: 'Sam Brown', age: 33, country: 'UK' }
+    ];
+
 
     return (
         <div>
@@ -129,7 +140,7 @@ const Layout = () => {
 
                     </div>
 
-                    <div className="table-container   ">
+                    {/* <div className="table-container   ">
                         <table className="my-table ">
                             <thead>
                                 <tr>
@@ -160,7 +171,12 @@ const Layout = () => {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
+
+                    <DataTable columns={tableColumns} data={tableData} />
+
+
+
                 </div>
                 <div className="footer flex justify-between">
                     <h4>Số Result</h4>
