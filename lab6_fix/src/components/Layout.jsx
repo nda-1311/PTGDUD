@@ -93,7 +93,7 @@ const Layout = () => {
     ];
 
 
-    //yc 4
+    //yc4
     const [apiData, setApiData] = useState([]);
 
 
@@ -101,10 +101,18 @@ const Layout = () => {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
             .then(data => {
-                setApiData(data);
+                const mapped = data.map(user => ({
+                    name: user.name,
+                    company: user.company?.name || '',
+                    value: `$${Math.floor(Math.random() * 1000)}`, // giả lập ORDER VALUE
+                    date: '10/04/2024',
+                    status: 'New' 
+                }));
+                setApiData(mapped);
             })
             .catch(err => console.error("Error fetching API:", err));
     }, []);
+
 
 
     return (
@@ -201,8 +209,11 @@ const Layout = () => {
                             </div>
 
                         </div>
+
+
+
                     </div>
-                    <DataTable columns={tableColumns} data={tableData} />
+                    <DataTable columns={tableColumns} data={apiData} />
                 </div>
                 <div className="footer flex justify-between">
                     <h4>Số Result</h4>
