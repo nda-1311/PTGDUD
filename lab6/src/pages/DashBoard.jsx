@@ -191,6 +191,8 @@ const DashBoard = () => {
                                             : 'bg-white text-gray-500 hover:bg-[#f14f7e] hover:text-white'}`}
                                     >
                                         {page}
+
+                                        
                                     </button>
                                 ))}
                             </div>
