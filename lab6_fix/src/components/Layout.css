@@ -26,3 +26,10 @@
   .container > div.footer {
     grid-area: footer;
   }
+.box > .box1,
+.box2,
+.box3 {
+    width: 30%;
+    height: 150px;
+    border: 1px solid black;
+}
