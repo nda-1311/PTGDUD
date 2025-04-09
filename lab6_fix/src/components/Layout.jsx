@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../components/DataTable';
 import iconActive from '../img/active.png';
 import imgBanner from '../img/Group.png';
-
+import { NavLink, Routes, Route, useLocation } from 'react-router-dom';
 
 const Layout = () => {
     // yc2 api overview
@@ -60,8 +60,21 @@ const Layout = () => {
             .catch(err => console.error("Error fetching API:", err));
     }, []);
 
-    // yc5 isActive 
-    const [activeMenu, setActiveMenu] = useState("Dashboard");
+    // yc5 isActive (✅ Đã thay bằng useLocation)
+    const location = useLocation();
+    const getPageTitle = (pathname) => {
+        const map = {
+            '/dashboard': 'Dashboard',
+            '/projects': 'Projects',
+            '/teams': 'Teams',
+            '/analytics': 'Analytics',
+            '/messages': 'Messages',
+            '/integrations': 'Integrations'
+        };
+        return map[pathname.toLowerCase()] || 'Page';
+    };
+
+    const activeMenu = getPageTitle(location.pathname);
 
     return (
         <div className="menu flex min-h-screen bg-gray-100">
@@ -69,37 +82,40 @@ const Layout = () => {
             <aside className="w-1/5 bg-white shadow-xl p-5 flex flex-col justify-between border-r border-gray-300">
                 <div>
                     <img className="mb-10 w-32" src={logo} alt="Logo" />
-                    {/* Sidebar items */}
+                    {/* Sidebar items dùng NavLink */}
                     {[
-                        { label: "Dashboard", icon: iconOverview },
-                        { label: "Projects", icon: iconFolder },
-                        { label: "Teams", icon: iconGroup },
-                        { label: "Analytics", icon: iconPie },
-                        { label: "Messages", icon: iconChat },
-                        { label: "Integrations", icon: iconCode },
+                        { label: "Dashboard", icon: iconOverview, path: "/dashboard" },
+                        { label: "Projects", icon: iconFolder, path: "/projects" },
+                        { label: "Teams", icon: iconGroup, path: "/teams" },
+                        { label: "Analytics", icon: iconPie, path: "/analytics" },
+                        { label: "Messages", icon: iconChat, path: "/messages" },
+                        { label: "Integrations", icon: iconCode, path: "/integrations" },
                     ].map((item) => (
-                        <div
+                        <NavLink
+                            to={item.path}
                             key={item.label}
-                            onClick={() => setActiveMenu(item.label)}
-                            className={`flex items-center gap-2 mb-5 cursor-pointer px-3 py-2 rounded-md transition-all duration-200 ${activeMenu === item.label
+                            className={({ isActive }) =>
+                                `flex items-center gap-2 mb-5 cursor-pointer px-3 py-2 rounded-md transition-all duration-200 ${isActive
                                     ? "bg-[#f14f7e] text-white"
                                     : "text-gray-700 hover:bg-pink-200"
-                                }`}
+                                }`
+                            }
                         >
                             <img
-                                src={activeMenu === item.label ? iconActive : item.icon}
+                                src={location.pathname === item.path ? iconActive : item.icon}
                                 alt=""
                             />
                             <span>{item.label}</span>
-                        </div>
+                        </NavLink>
                     ))}
                 </div>
 
                 <div className='bg-[#eff6ff] w-56 h-64 mb-30 ml-10'>
                     <img src={imgBanner} alt="" />
-
-                    <button style={{cursor: "pointer"}} className="flex items-center gap-2 px-4 py-2 border border-[#4d94ff] rounded text-[#4d94ff] hover:bg-[#4d94ff] hover:text-white  w-56 mt-10 justify-center">
-                      
+                    <button
+                        style={{ cursor: "pointer" }}
+                        className="flex items-center gap-2 px-4 py-2 border border-[#4d94ff] rounded text-[#4d94ff] hover:bg-[#4d94ff] hover:text-white w-56 mt-10 justify-center"
+                    >
                         Try now
                     </button>
                 </div>
@@ -136,10 +152,10 @@ const Layout = () => {
                                     <div
                                         key={index}
                                         className={`p-5 rounded-xl shadow-md ${index === 0
-                                                ? "bg-[#fef2f4]"
-                                                : index === 1
-                                                    ? "bg-[#eff6ff]"
-                                                    : "bg-[#f0f8fb]"
+                                            ? "bg-[#fef2f4]"
+                                            : index === 1
+                                                ? "bg-[#eff6ff]"
+                                                : "bg-[#f0f8fb]"
                                             }`}
                                     >
                                         <div className="flex justify-between items-center mb-2">
@@ -171,11 +187,11 @@ const Layout = () => {
                                     <h1 className="text-2xl font-bold">Detailed Report</h1>
                                 </div>
                                 <div className="flex gap-4">
-                                    <button style={{cursor: "pointer"}} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white  rounded text-[#f14f7e]">
+                                    <button style={{ cursor: "pointer" }} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white  rounded text-[#f14f7e]">
                                         <img src={iconFile} alt="" className="w-4 h-4" />
                                         Import
                                     </button>
-                                    <button style={{cursor: "pointer"}} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white rounded text-[#f14f7e]">
+                                    <button style={{ cursor: "pointer" }} className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white rounded text-[#f14f7e]">
                                         <img src={iconFile} alt="" className="w-4 h-4" />
                                         Export
                                     </button>
