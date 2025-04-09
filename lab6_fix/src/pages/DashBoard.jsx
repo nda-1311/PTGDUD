@@ -14,6 +14,7 @@ import iconAccount from '../img/Button 1530.png';
 import iconFile from '../img/File text 1.png';
 
 const DashBoard = () => {
+    const [isEditing, setIsEditing] = useState(false);
     const [overviewData, setOverviewData] = useState([]);
     const [apiData, setApiData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +38,7 @@ const DashBoard = () => {
             .then(data => {
                 const extended = Array(3).fill(data).flat();
                 const mapped = extended.map((user, index) => ({
-                    id: user.id * 10 + index, // tạo id giả để phân biệt
+                    id: user.id * 10 + index,
                     name: user.name,
                     company: user.company?.name || '',
                     value: `$${Math.floor(Math.random() * 1000)}`,
@@ -130,18 +131,45 @@ const DashBoard = () => {
                                 <div className="flex items-center gap-2">
                                     <img src={iconFile} alt="Report Icon" />
                                     <h1 className="text-2xl font-bold">Detailed Report</h1>
+                                   
                                 </div>
                                 <div className="flex gap-4">
-                                    {"Import Export".split(" ").map((text, i) => (
+                                    {[
+                                        {
+                                            text: "Add User",
+                                            icon: iconAccount,
+                                            onClick: () => {
+                                                setSelectedUser({
+                                                    id: null,
+                                                    name: '',
+                                                    company: '',
+                                                    value: '',
+                                                    date: '',
+                                                    status: ''
+                                                });
+                                                setIsEditing(false); // <-- xác định là đang thêm mới
+                                                setShowModal(true);
+                                            },
+                                            className: "border-blue-500 hover:bg-blue-500 hover:text-white text-blue-500"
+                                        },
+                                        ...["Import", "Export"].map((text) => ({
+                                            text,
+                                            icon: iconFile,
+                                            onClick: () => { },
+                                            className: "border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white text-[#f14f7e]"
+                                        }))
+                                    ].map(({ text, icon, onClick, className }, i) => (
                                         <button
                                             key={i}
-                                            className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white rounded text-[#f14f7e]"
+                                            onClick={onClick}
+                                            className={`flex items-center gap-2 px-4 py-2 border rounded ${className}`}
                                         >
-                                            <img src={iconFile} alt={`${text} Icon`} className="w-4 h-4" />
+                                            <img src={icon} alt={`${text} Icon`} className="w-4 h-4" />
                                             {text}
                                         </button>
                                     ))}
                                 </div>
+
                             </div>
 
                             <DataTable
@@ -149,6 +177,7 @@ const DashBoard = () => {
                                 data={paginatedData}
                                 onEdit={(user) => {
                                     setSelectedUser(user);
+                                    setIsEditing(true); // <-- xác định là đang sửa
                                     setShowModal(true);
                                 }}
                             />
@@ -165,14 +194,34 @@ const DashBoard = () => {
                                             <input type="text" value={selectedUser.status} onChange={(e) => setSelectedUser({ ...selectedUser, status: e.target.value })} placeholder="Status" className="w-full border rounded px-3 py-2" />
                                         </div>
                                         <div className="flex justify-end gap-3 mt-6">
-                                            <button style={{cursor: "pointer"}} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onClick={() => setShowModal(false)}>Hủy</button>
-                                            <button style={{cursor: "pointer"}}
-                                                className="px-4 py-2 bg-[#f14f7e] text-white rounded hover:bg-[#d93b6a]"
-                                                onClick={() => {
-                                                    const updated = apiData.map(user => user.id === selectedUser.id ? selectedUser : user);
-                                                    setApiData(updated);
-                                                    setShowModal(false);
-                                                }}
+                                            <button style={{ cursor: "pointer" }} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onClick={() => setShowModal(false)}>Hủy</button>
+                                            <button style={{ cursor: "pointer" }}
+                                               className="px-4 py-2 bg-[#f14f7e] text-white rounded hover:bg-[#d93b6a]"
+                                               onClick={() => {
+                                                   if (isEditing) {
+                                                       // EDIT
+                                                       const updated = apiData.map(user => user.id === selectedUser.id ? selectedUser : user);
+                                                       setApiData(updated);
+                                                   } else {
+                                                       // ADD
+                                                       const newUser = {
+                                                           ...selectedUser,
+                                                           id: Date.now(),
+                                                       };
+                                                       fetch('https://jsonplaceholder.typicode.com/users', {
+                                                           method: 'POST',
+                                                           headers: {
+                                                               'Content-Type': 'application/json',
+                                                           },
+                                                           body: JSON.stringify(newUser),
+                                                       })
+                                                           .then(res => res.json())
+                                                           .then(() => {
+                                                               setApiData([newUser, ...apiData]);
+                                                           });
+                                                   }
+                                                   setShowModal(false);
+                                               }}
                                             >
                                                 Lưu
                                             </button>
