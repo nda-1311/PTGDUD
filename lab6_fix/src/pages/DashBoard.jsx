@@ -39,11 +39,15 @@ const DashBoard = () => {
                 const extended = Array(3).fill(data).flat();
                 const mapped = extended.map((user, index) => ({
                     id: user.id * 10 + index,
+                    avatar: `https://i.pravatar.cc/150?img=${index + 1}`, // avatar giả
                     name: user.name,
                     company: user.company?.name || '',
                     value: `$${Math.floor(Math.random() * 1000)}`,
                     date: '10/04/2024',
-                    status: 'New'
+                    status: ['New', 'In-progress', 'Completed'][Math.floor(Math.random() * 3)],
+                    avatar: `https://i.pravatar.cc/150?img=${(index % 70) + 1}`
+
+
                 }));
                 setApiData(mapped);
             });
@@ -131,7 +135,7 @@ const DashBoard = () => {
                                 <div className="flex items-center gap-2">
                                     <img src={iconFile} alt="Report Icon" />
                                     <h1 className="text-2xl font-bold">Detailed Report</h1>
-                                   
+
                                 </div>
                                 <div className="flex gap-4">
                                     {[
@@ -196,32 +200,32 @@ const DashBoard = () => {
                                         <div className="flex justify-end gap-3 mt-6">
                                             <button style={{ cursor: "pointer" }} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onClick={() => setShowModal(false)}>Hủy</button>
                                             <button style={{ cursor: "pointer" }}
-                                               className="px-4 py-2 bg-[#f14f7e] text-white rounded hover:bg-[#d93b6a]"
-                                               onClick={() => {
-                                                   if (isEditing) {
-                                                       // EDIT
-                                                       const updated = apiData.map(user => user.id === selectedUser.id ? selectedUser : user);
-                                                       setApiData(updated);
-                                                   } else {
-                                                       // ADD
-                                                       const newUser = {
-                                                           ...selectedUser,
-                                                           id: Date.now(),
-                                                       };
-                                                       fetch('https://jsonplaceholder.typicode.com/users', {
-                                                           method: 'POST',
-                                                           headers: {
-                                                               'Content-Type': 'application/json',
-                                                           },
-                                                           body: JSON.stringify(newUser),
-                                                       })
-                                                           .then(res => res.json())
-                                                           .then(() => {
-                                                               setApiData([newUser, ...apiData]);
-                                                           });
-                                                   }
-                                                   setShowModal(false);
-                                               }}
+                                                className="px-4 py-2 bg-[#f14f7e] text-white rounded hover:bg-[#d93b6a]"
+                                                onClick={() => {
+                                                    if (isEditing) {
+                                                        // EDIT
+                                                        const updated = apiData.map(user => user.id === selectedUser.id ? selectedUser : user);
+                                                        setApiData(updated);
+                                                    } else {
+                                                        // ADD
+                                                        const newUser = {
+                                                            ...selectedUser,
+                                                            id: Date.now(),
+                                                        };
+                                                        fetch('https://jsonplaceholder.typicode.com/users', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify(newUser),
+                                                        })
+                                                            .then(res => res.json())
+                                                            .then(() => {
+                                                                setApiData([newUser, ...apiData]);
+                                                            });
+                                                    }
+                                                    setShowModal(false);
+                                                }}
                                             >
                                                 Lưu
                                             </button>
