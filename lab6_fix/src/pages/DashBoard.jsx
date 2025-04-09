@@ -17,8 +17,10 @@ const DashBoard = () => {
     const [overviewData, setOverviewData] = useState([]);
     const [apiData, setApiData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
+    const itemsPerPage = 6;
     const location = useLocation();
 
     useEffect(() => {
@@ -33,8 +35,9 @@ const DashBoard = () => {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
             .then(data => {
-                const extended = Array(7).fill(data).flat(); // nhân bản cho nhiều dữ liệu
+                const extended = Array(3).fill(data).flat();
                 const mapped = extended.map((user, index) => ({
+                    id: user.id * 10 + index, // tạo id giả để phân biệt
                     name: user.name,
                     company: user.company?.name || '',
                     value: `$${Math.floor(Math.random() * 1000)}`,
@@ -61,16 +64,14 @@ const DashBoard = () => {
             setCurrentPage(page);
         }
     };
+
     const getPageNumbers = () => {
-        return ["<", 1, 2, 3, '...', 10, 11, ">"];
+        const pages = [];
+        for (let i = 1; i <= totalPages; i++) {
+            pages.push(i);
+        }
+        return pages;
     };
-    
-
-
-
-
-
-
 
     const getPageTitle = (pathname) => {
         const map = {
@@ -95,7 +96,6 @@ const DashBoard = () => {
 
                 {activeMenu === "Dashboard" ? (
                     <>
-                        {/* OVERVIEW SECTION */}
                         <div className="mb-10">
                             <div className="flex items-center gap-2 mb-4">
                                 <img src={iconOverview} alt="Overview Icon" />
@@ -125,7 +125,6 @@ const DashBoard = () => {
                             </div>
                         </div>
 
-                        {/* DETAILED REPORT SECTION */}
                         <div className="mb-6">
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center gap-2">
@@ -133,8 +132,8 @@ const DashBoard = () => {
                                     <h1 className="text-2xl font-bold">Detailed Report</h1>
                                 </div>
                                 <div className="flex gap-4">
-                                    {["Import", "Export"].map((text, i) => (
-                                        <button style={{cursor: "pointer"}}
+                                    {"Import Export".split(" ").map((text, i) => (
+                                        <button
                                             key={i}
                                             className="flex items-center gap-2 px-4 py-2 border border-[#f14f7e] hover:bg-[#f14f7e] hover:text-white rounded text-[#f14f7e]"
                                         >
@@ -145,30 +144,58 @@ const DashBoard = () => {
                                 </div>
                             </div>
 
-                            <DataTable columns={tableColumns} data={paginatedData} />
+                            <DataTable
+                                columns={tableColumns}
+                                data={paginatedData}
+                                onEdit={(user) => {
+                                    setSelectedUser(user);
+                                    setShowModal(true);
+                                }}
+                            />
 
-                            {/* PAGINATION */}
+                            {showModal && selectedUser && (
+                                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                                    <div className="bg-white p-6 rounded-xl w-[90%] md:w-[500px]">
+                                        <h2 className="text-xl font-bold mb-4 text-center">Chỉnh sửa thông tin</h2>
+                                        <div className="grid gap-4">
+                                            <input type="text" value={selectedUser.name} onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })} placeholder="Customer Name" className="w-full border rounded px-3 py-2" />
+                                            <input type="text" value={selectedUser.company} onChange={(e) => setSelectedUser({ ...selectedUser, company: e.target.value })} placeholder="Company" className="w-full border rounded px-3 py-2" />
+                                            <input type="text" value={selectedUser.value} onChange={(e) => setSelectedUser({ ...selectedUser, value: e.target.value })} placeholder="Order Value" className="w-full border rounded px-3 py-2" />
+                                            <input type="text" value={selectedUser.date} onChange={(e) => setSelectedUser({ ...selectedUser, date: e.target.value })} placeholder="Order Date" className="w-full border rounded px-3 py-2" />
+                                            <input type="text" value={selectedUser.status} onChange={(e) => setSelectedUser({ ...selectedUser, status: e.target.value })} placeholder="Status" className="w-full border rounded px-3 py-2" />
+                                        </div>
+                                        <div className="flex justify-end gap-3 mt-6">
+                                            <button style={{cursor: "pointer"}} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onClick={() => setShowModal(false)}>Hủy</button>
+                                            <button style={{cursor: "pointer"}}
+                                                className="px-4 py-2 bg-[#f14f7e] text-white rounded hover:bg-[#d93b6a]"
+                                                onClick={() => {
+                                                    const updated = apiData.map(user => user.id === selectedUser.id ? selectedUser : user);
+                                                    setApiData(updated);
+                                                    setShowModal(false);
+                                                }}
+                                            >
+                                                Lưu
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="flex justify-end mt-4">
-                                {getPageNumbers().map((page, index) =>
-                                    page === '...' ? (
-                                        <span key={index} className="mx-1 px-4 py-2 text-gray-400 select-none">...</span>
-                                    ) : (
-                                        <button
-                                            key={page}
-                                            onClick={() => handlePageChange(page)}
-                                            className={`mx-1 px-4 py-2 rounded-full transition-all duration-200 ${currentPage === page
-                                                ? 'bg-[#f14f7e] text-white border border-[#f14f7e]'
-                                                : 'bg-white text-gray-500 hover:bg-[#f14f7e] hover:text-white'
-                                                }`}
-                                        >
-                                            {page}
-                                        </button>
-                                    )
-                                )}
+                                {getPageNumbers().map((page, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handlePageChange(page)}
+                                        className={`mx-1 px-4 py-2 rounded-full transition-all duration-200 ${currentPage === page
+                                            ? 'bg-[#f14f7e] text-white border border-[#f14f7e]'
+                                            : 'bg-white text-gray-500 hover:bg-[#f14f7e] hover:text-white'}`}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
-                        {/* FOOTER */}
                         <Footer totalResults={apiData.length} />
                     </>
                 ) : (
