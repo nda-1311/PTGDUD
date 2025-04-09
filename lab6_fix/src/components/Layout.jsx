@@ -13,7 +13,23 @@ import iconGroup from '../img/Groups.png'
 import iconPie from '../img/Pie chart.png'
 import iconChat from '../img/Chat.png'
 import iconCode from '../img/Code.png'
+import { useEffect, useState } from 'react';
+
 const Layout = () => {
+
+    // dùng API Overview
+    const [overviewData, setOverviewData] = useState([]);
+
+    useEffect(() => {
+      
+        const mockData = [
+            { title: "Total Sales", amount: "$5,000", sub: "↑ 5% since last week" },
+            { title: "Revenue", amount: "$8,200", sub: "↑ 2% this month" },
+            { title: "Users", amount: "1,200", sub: "↓ 1% today" }
+        ];
+        setOverviewData(mockData);
+    }, []);
+
     return (
         <div>
 
@@ -74,36 +90,22 @@ const Layout = () => {
                         <h1>Overview</h1>
                     </div>
 
-                    <div className='box flex p-5 justify-between'>
-                        <div className="box1 p-5">
-                            <div className="head flex justify-between ">
-                                <p>namebox1</p>
-                                <img src={iconCart} alt="" />
+                    <div className='box flex p-5 justify-between gap-5'>
+                        {overviewData.map((item, index) => (
+                            <div key={index} className={`box${index + 1} p-5 bg-white rounded-xl shadow-md w-1/3`}>
+                                <div className="head flex justify-between items-center mb-3">
+                                    <p className="text-lg font-semibold">{item.title}</p>
+                                    <img
+                                        src={index === 0 ? iconCart : index === 1 ? iconMoney : iconAccount}
+                                        alt=""
+                                        className="w-6 h-6"
+                                    />
+                                </div>
+                                <p className="text-2xl font-bold mb-1">{item.amount}</p>
+                                <p className="text-sm text-gray-500">{item.sub}</p>
                             </div>
-                            <p>price1</p>
-                            <p>sub1</p>
-                        </div>
-
-                        <div className="box2 p-5">
-                            <div className="head flex justify-between ">
-                                <p>namebox2</p>
-                                <img src={iconMoney} alt="" />
-                            </div>
-                            <p>price2</p>
-                            <p>sub2</p>
-                        </div>
-
-                        <div className="box3 p-5">
-                            <div className="head flex justify-between ">
-                                <p>namebox3</p>
-                                <img src={iconAccount} alt="" />
-                            </div>
-                            <p>price3</p>
-                            <p>sub3</p>
-                        </div>
-
+                        ))}
                     </div>
-
                     <div className='flex  justify-between'>
                         <div className='flex'>
                             <img src={iconFile} alt="" />
